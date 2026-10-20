@@ -110,15 +110,3 @@ a:focus-visible, button:focus-visible, summary:focus-visible { outline: 3px soli
   *, *::before, *::after { animation-duration: .01ms !important; transition-duration: .01ms !important; }
   [data-aos] { opacity: 1 !important; transform: none !important; }
 }
-
-/* Keep the paper's Figure 1 readable across the featured card. */
-.publication-featured { grid-template-columns: minmax(0, 1fr); gap: 20px; }
-.publication-figure { min-width: 0; margin: 0; }
-.publication-figure .publication-image { background: #fff; border: 1px solid #e4edf2; cursor: zoom-in; margin-top: 0; }
-.publication-figure .publication-image img { display: block; width: 100%; height: auto; padding: 10px; }
-.publication-figure figcaption { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 4px 16px; margin-top: 8px; color: #60717d; font-size: .75rem; }
-.publication-figure figcaption a { color: #086b92; font-weight: 600; }
-@media (max-width: 767px) {
-  .publication-figure .publication-image img { height: auto; padding: 4px; }
-  .publication-figure figcaption { font-size: .72rem; }
-}
