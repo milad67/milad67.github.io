@@ -15,11 +15,19 @@
   const headerToggleBtn = document.querySelector('.header-toggle');
 
   function headerToggle() {
-    document.querySelector('#header').classList.toggle('header-show');
-    headerToggleBtn.classList.toggle('bi-list');
-    headerToggleBtn.classList.toggle('bi-x');
+    const isOpen = document.querySelector('#header').classList.toggle('header-show');
+    headerToggleBtn.classList.toggle('bi-list', !isOpen);
+    headerToggleBtn.classList.toggle('bi-x', isOpen);
+    headerToggleBtn.setAttribute('aria-expanded', String(isOpen));
+    headerToggleBtn.setAttribute('aria-label', isOpen ? 'Close navigation' : 'Open navigation');
   }
-  headerToggleBtn.addEventListener('click', headerToggle);
+  if (headerToggleBtn) headerToggleBtn.addEventListener('click', headerToggle);
+  document.addEventListener('keydown', (event) => {
+    if (event.key === 'Escape' && document.querySelector('#header').classList.contains('header-show')) {
+      headerToggle();
+      headerToggleBtn.focus();
+    }
+  });
 
   /**
    * Hide mobile nav on same-page/hash links
@@ -82,6 +90,7 @@
   function aosInit() {
     AOS.init({
       duration: 600,
+      disable: window.matchMedia('(prefers-reduced-motion: reduce)').matches,
       easing: 'ease-in-out',
       once: true,
       mirror: false
@@ -227,3 +236,24 @@
   document.addEventListener('scroll', navmenuScrollspy);
 
 })();
+
+// Citation controls use the visible citation text, with feedback for each paper.
+document.querySelectorAll('[data-copy-citation]').forEach((button) => {
+  button.addEventListener('click', async () => {
+    const citation = document.getElementById(button.dataset.copyCitation);
+    const feedback = button.closest('.citation-panel').querySelector('.citation-feedback');
+    if (!citation) return;
+    try {
+      if (!navigator.clipboard) throw new Error('Clipboard unavailable');
+      await navigator.clipboard.writeText(citation.textContent.trim());
+      feedback.textContent = 'BibTeX copied.';
+    } catch {
+      const selection = window.getSelection();
+      const range = document.createRange();
+      range.selectNodeContents(citation);
+      selection.removeAllRanges();
+      selection.addRange(range);
+      feedback.textContent = 'Citation selected. Use your browser’s copy command.';
+    }
+  });
+});
